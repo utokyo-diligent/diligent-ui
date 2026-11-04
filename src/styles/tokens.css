@@ -1,0 +1,81 @@
+:root {
+  /* 1. Primitive: palette values and typography scales. */
+  --primitive-color-white: #ffffff;
+  --primitive-color-gray-50: #f7f7f7;
+  --primitive-color-gray-100: #efefef;
+  --primitive-color-gray-125: #eeeeee;
+  --primitive-color-gray-200: #d8d8d8;
+  --primitive-color-gray-600: #626262;
+  --primitive-color-gray-800: #333333;
+  --primitive-color-gray-950: #111111;
+
+  --primitive-font-sans: sans-serif;
+  --primitive-font-weight-medium: 500;
+  --primitive-font-size-display: clamp(32px, 3.4vw, 52px);
+  --primitive-font-size-display-compact: clamp(27px, 7vw, 42px);
+  --primitive-font-size-heading-lg: clamp(28px, 3vw, 40px);
+  --primitive-font-size-heading-md: clamp(22px, 2vw, 28px);
+  --primitive-font-size-12: 12px;
+  --primitive-font-size-13: 13px;
+  --primitive-font-size-15: 15px;
+  --primitive-font-size-sm: 0.875rem;
+  --primitive-font-size-md: 1rem;
+  --primitive-font-size-lg: 1.125rem;
+  --primitive-line-height-display: 1.4;
+  --primitive-line-height-normal: 1.5;
+  --primitive-line-height-relaxed: 1.7;
+  --primitive-line-height-loose: 1.8;
+  --primitive-line-height-sm: calc(1.25 / 0.875);
+  --primitive-line-height-lg: calc(1.75 / 1.125);
+  --primitive-letter-spacing-tight: -0.035em;
+
+  /* 2. Semantic: theme roles. Components resolve their own tokens at use sites. */
+  --background: var(--primitive-color-white);
+  --foreground: var(--primitive-color-gray-950);
+  --card: var(--primitive-color-white);
+  --card-foreground: var(--primitive-color-gray-950);
+  --surface-subtle: var(--primitive-color-gray-50);
+  --control-foreground: var(--primitive-color-gray-950);
+  --primary: var(--primitive-color-gray-950);
+  --primary-foreground: var(--primitive-color-white);
+  --primary-accent: var(--primitive-color-gray-800);
+  --secondary: var(--primitive-color-gray-100);
+  --secondary-foreground: var(--primitive-color-gray-950);
+  --muted: var(--primitive-color-gray-100);
+  --muted-foreground: var(--primitive-color-gray-600);
+  --accent: var(--primitive-color-gray-125);
+  --accent-foreground: var(--primitive-color-gray-950);
+  --border: var(--primitive-color-gray-200);
+  --outline: var(--primitive-color-gray-950);
+  --radius: 0rem;
+
+  --font-body: var(--primitive-font-sans);
+  --text-page-title-size: var(--primitive-font-size-display);
+  --text-page-title-weight: var(--primitive-font-weight-medium);
+  --text-page-title-leading: var(--primitive-line-height-display);
+  --text-section-title-size: var(--primitive-font-size-heading-lg);
+  --text-section-title-weight: var(--primitive-font-weight-medium);
+  --text-section-title-leading: var(--primitive-line-height-normal);
+  --text-section-title-tracking: var(--primitive-letter-spacing-tight);
+  --text-content-title-size: var(--primitive-font-size-heading-md);
+  --text-content-title-weight: var(--primitive-font-weight-medium);
+  --text-content-title-leading: var(--primitive-line-height-normal);
+  --text-body-size: var(--primitive-font-size-15);
+  --text-body-leading: var(--primitive-line-height-loose);
+  --text-caption-size: var(--primitive-font-size-12);
+  --text-caption-leading: var(--primitive-line-height-normal);
+  --text-note-size: var(--primitive-font-size-13);
+  --text-note-leading: var(--primitive-line-height-relaxed);
+  --text-action-weight: var(--primitive-font-weight-medium);
+  --text-action-sm-size: var(--primitive-font-size-sm);
+  --text-action-sm-leading: var(--primitive-line-height-sm);
+  --text-action-md-size: var(--primitive-font-size-md);
+  --text-action-md-leading: var(--primitive-line-height-normal);
+  --text-action-lg-size: var(--primitive-font-size-lg);
+  --text-action-lg-leading: var(--primitive-line-height-lg);
+  color-scheme: light;
+}
+
+@media (max-width: 767px) {
+  :root { --text-page-title-size: var(--primitive-font-size-display-compact); }
+}

@@ -1,0 +1,16 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'dl'> { items: readonly { label: string; value: string }[]; }
+const { items, class: className, ...attributes } = Astro.props;
+---
+<dl class={className} data-slot="fact-list" {...attributes}>
+  {items.map(item => <div><dt>{item.label}</dt><dd>{item.value}</dd></div>)}
+</dl>
+<style>
+  dl { min-width: 0; }
+  dl > div { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 24px; padding-block: 18px; border-bottom: 1px solid var(--fact-list-border-color, var(--border)); font-size: var(--fact-list-size, var(--text-body-size)); line-height: var(--fact-list-line-height, var(--text-body-leading)); }
+  dl > div:first-child { padding-top: 0; }
+  dt { color: var(--fact-list-label-color, var(--muted-foreground)); }
+  dd { overflow-wrap: anywhere; }
+  @media (max-width: 767px) { dl > div { grid-template-columns: 1fr; gap: 6px; padding-block: 16px; } }
+</style>

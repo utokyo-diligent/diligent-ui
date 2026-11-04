@@ -1,0 +1,11 @@
+node_modules/
+.astro/
+dist/
+*.tgz
+.DS_Store
+output/
+
+.env
+.env.*
+!.env.example
+.npmrc
