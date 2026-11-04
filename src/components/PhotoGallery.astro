@@ -1,0 +1,26 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'div'> {
+  photos: readonly { image: ImageMetadata; alt: string; caption?: string }[];
+  sizes?: string;
+}
+const { photos, sizes = '(max-width: 767px) 100vw, 50vw', class: className, ...attributes } = Astro.props;
+---
+<div class:list={['gallery', { single: photos.length === 1 }, className]} data-slot="photo-gallery" {...attributes}>
+  {photos.map(photo => {
+    const width = Math.min(photo.image.width, 1280);
+    return <figure>
+      <Image src={photo.image} alt={photo.alt} width={width} widths={[480, 800].filter(size => size < width).concat(width)} sizes={sizes} format={photo.image.format === 'svg' ? 'svg' : 'webp'} quality={90} loading="lazy" />
+      {photo.caption && <figcaption>{photo.caption}</figcaption>}
+    </figure>;
+  })}
+</div>
+<style>
+  .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 28px; }
+  .single { grid-template-columns: 1fr; }
+  img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; background: var(--photo-gallery-image-background, var(--muted)); }
+  figcaption { margin-top: 12px; font-size: var(--photo-gallery-caption-size, var(--text-note-size)); line-height: var(--photo-gallery-caption-line-height, var(--text-note-leading)); color: var(--photo-gallery-caption-color, var(--muted-foreground)); }
+  @media (max-width: 767px) { .gallery { grid-template-columns: 1fr; gap: 28px; } }
+</style>

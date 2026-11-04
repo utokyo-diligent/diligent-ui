@@ -1,0 +1,18 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+interface Props extends HTMLAttributes<'div'> { id: string; title: string; }
+const { id, title, class: className, ...attributes } = Astro.props;
+---
+<div class:list={['section-heading', className]} data-slot="section-heading" {...attributes}>
+  <h2 id={id}>{title}</h2>
+  {Astro.slots.has('default') && <div class="section-action"><slot /></div>}
+</div>
+<style>
+  .section-heading { display: flex; justify-content: space-between; align-items: flex-end; gap: 32px; margin-bottom: 48px; }
+  h2 { font-size: var(--section-heading-size, var(--text-section-title-size)); font-weight: var(--section-heading-weight, var(--text-section-title-weight)); letter-spacing: var(--section-heading-letter-spacing, var(--text-section-title-tracking)); line-height: var(--section-heading-line-height, var(--text-section-title-leading)); }
+  .section-action { padding-bottom: 9px; flex-shrink: 0; }
+  @media (max-width: 600px) {
+    .section-heading { align-items: flex-start; flex-direction: column; gap: 20px; margin-bottom: 32px; }
+    .section-action { padding-bottom: 0; }
+  }
+</style>

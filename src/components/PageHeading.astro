@@ -1,0 +1,12 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+type Props = HTMLAttributes<'h1'>;
+const { class: className, ...attributes } = Astro.props;
+---
+<h1 class={className} data-slot="page-heading" {...attributes}><slot /></h1>
+<style>
+  h1 { font-size: var(--page-heading-size, var(--text-page-title-size)); font-weight: var(--page-heading-weight, var(--text-page-title-weight)); line-height: var(--page-heading-line-height, var(--page-heading-leading, var(--text-page-title-leading))); letter-spacing: var(--page-heading-letter-spacing, var(--page-heading-tracking, normal)); overflow-wrap: anywhere; padding-top: 144px; padding-bottom: 64px; border-bottom: 1px solid var(--page-heading-border-color, var(--border)); margin-bottom: 72px; }
+  @media (max-width: 767px) {
+    h1 { padding-top: 72px; padding-bottom: 48px; margin-bottom: 44px; }
+  }
+</style>
