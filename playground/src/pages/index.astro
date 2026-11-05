@@ -1,5 +1,5 @@
 ---
-import { Button, PageHeading, SectionHeading, ContentSection, FactList, PhotoGallery, ImageCarousel } from '../../../src';
+import { Button, LinkRow, PageHeading, SectionHeading, ContentSection, FactList, PhotoGallery, ImageCarousel } from '../../../src';
 import '../../../styles.css';
 import light from '../assets/sample.svg';
 import dark from '../assets/sample-dark.svg';
@@ -38,6 +38,10 @@ const slides = [
       <section aria-labelledby="section-heading">
         <SectionHeading id="section-heading" title="SectionHeading"><a href="#content">アクション →</a></SectionHeading>
       </section>
+      <ContentSection id="links" title="LinkRow">
+        <LinkRow href="#content" label="コンポーネント概要" eyebrow="01 / ガイド" description="本文の構成を確認できます。" data-example="link-row" />
+        <LinkRow href="#facts" label="情報一覧" />
+      </ContentSection>
       <ContentSection id="content" title="ContentSection">
         <p>見出しと本文を縦に並べます。本文の構成はスロットで指定します。</p>
       </ContentSection>

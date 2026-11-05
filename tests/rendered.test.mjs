@@ -29,3 +29,11 @@ test('disabled links cannot navigate and only receive focus when requested', () 
   assert.match(example('disabled-link'), /tabindex="-1"/);
   assert.match(example('focusable-disabled-link'), /tabindex="0"/);
 });
+
+test('link rows render one native link with a decorative arrow', () => {
+  assert.match(example('link-row'), /^<a\b/);
+  assert.match(example('link-row'), /href="#content"/);
+  const row = html.split(example('link-row'))[1].split('</a>')[0];
+  assert.match(row, /コンポーネント概要/);
+  assert.match(row, /<svg[^>]+aria-hidden="true"/);
+});

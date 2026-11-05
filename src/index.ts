@@ -1,6 +1,7 @@
 export { default as Button } from './components/Button.astro';
 export { button as buttonVariants } from './components/button-variants';
 export { default as TextLink } from './components/TextLink.astro';
+export { default as LinkRow } from './components/LinkRow.astro';
 export { default as PageHeading } from './components/PageHeading.astro';
 export { default as SectionHeading } from './components/SectionHeading.astro';
 export { default as ContentSection } from './components/ContentSection.astro';

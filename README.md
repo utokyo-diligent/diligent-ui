@@ -58,6 +58,7 @@ export default defineConfig({ vite: { plugins: [tailwindcss()] } });
 | --- | --- |
 | `Button` | `variant`・`size`・ネイティブ属性。`href` でリンク。`disabled` で実行・移動を無効化 |
 | `TextLink` | テキストリンク。アイコンは `start` または `end` スロット。別タブを開く場合は `target="_blank"` と、必要に応じて `newTabLabel` を指定 |
+| `LinkRow` | `href`・`label`・任意の `eyebrow` と `description`。案内や目次を行全体が押せるリンクとして表示 |
 | `PageHeading` | スロットを `h1` として描画。ページ上部の余白と区切り線 |
 | `SectionHeading` | `id`・`title`。任意のアクションをスロットに配置 |
 | `ContentSection` | `id`・`title`。見出しの下に本文を配置 |
@@ -95,6 +96,7 @@ Primitive、Semantic、Component-specific の3層を使います。既定値と�
 | PageHeading / SectionHeading | `--page-heading-*` / `--section-heading-*` の size、weight、line-height、letter-spacing が見出しの組版を制御。ページ見出しの従来の `--page-heading-leading` / `--page-heading-tracking` も利用可能 |
 | ContentSection / FactList | `--content-section-title-*` は本文内見出し、`--fact-list-size` と `--fact-list-line-height` は本文の設定を参照。`--fact-list-label-color` は補足色 |
 | TextLink / PhotoGallery | `--text-link-size` と `--photo-gallery-caption-size` は `--text-note-size`（13px）。リンクの色は継承し、キャプションは補足色 |
+| LinkRow | `--link-row-label-size` は本文内見出し、`--link-row-arrow-color` は主要アクション色を参照。`--link-row-padding` で行の余白を調整 |
 | ImageCarousel | `--image-carousel-background`、`--image-carousel-control-color`、`--image-carousel-focus-color` は背景・操作・フォーカスの色を参照 |
 
 CSS変数は意味と用途で選び、個々のコンポーネントや利用側から上書きできます。フォントファミリーは利用側が設定します。以下はライトテーマの初期値です。
