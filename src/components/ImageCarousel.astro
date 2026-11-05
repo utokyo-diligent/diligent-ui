@@ -2,6 +2,8 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import type { HTMLAttributes } from 'astro/types';
+import ImageCarouselControls from './ImageCarouselControls.astro';
+import { responsiveImage } from '../lib/responsive-image';
 
 interface Props extends HTMLAttributes<'div'> {
   slides: readonly { image: ImageMetadata; alt: string; brightness?: number }[];
@@ -9,57 +11,97 @@ interface Props extends HTMLAttributes<'div'> {
   autoplay?: boolean;
   sizes?: string;
 }
+
 const { slides, label, autoplay = true, sizes = '100vw', ...attributes } = Astro.props;
 if (!slides.length) throw new Error('ImageCarousel requires at least one slide.');
 ---
-<div data-image-carousel data-autoplay={autoplay} data-slot="image-carousel" role="region" aria-roledescription="カルーセル" aria-label={label} {...attributes}>
+<diligent-image-carousel
+  data-image-carousel
+  data-autoplay={autoplay}
+  data-slot="image-carousel"
+  role="region"
+  aria-roledescription="カルーセル"
+  aria-label={label}
+  {...attributes}
+>
   <div class="carousel-viewport" data-viewport>
-    {slides.map((slide, index) => {
-      const width = Math.min(slide.image.width, 2400);
-      return <div data-slide data-active={index === 0 ? 'true' : 'false'} role="group" aria-roledescription="スライド" aria-label={`${index + 1} / ${slides.length}`} aria-hidden={index !== 0 ? 'true' : undefined} hidden={index !== 0}>
-        <Image src={slide.image} alt={slide.alt} widths={[640, 1024, 1600].filter(size => size < width).concat(width)} sizes={sizes} width={width} quality={85} format={slide.image.format === 'svg' ? 'svg' : 'webp'} loading="eager" fetchpriority={index === 0 ? 'high' : 'low'} draggable="false" class="carousel-image" style={`--slide-brightness: ${slide.brightness ?? 1}`} />
-      </div>;
-    })}
+    {slides.map((slide, index) => (
+      <div
+        data-slide
+        data-active={String(index === 0)}
+        role="group"
+        aria-roledescription="スライド"
+        aria-label={`${index + 1} / ${slides.length}`}
+        aria-hidden={index === 0 ? undefined : 'true'}
+        hidden={index !== 0}
+      >
+        <Image
+          src={slide.image}
+          alt={slide.alt}
+          {...responsiveImage(slide.image, 2400, [640, 1024, 1600])}
+          sizes={sizes}
+          quality={85}
+          loading="eager"
+          fetchpriority={index === 0 ? 'high' : 'low'}
+          draggable="false"
+          class="carousel-image"
+          style={`--slide-brightness: ${slide.brightness ?? 1}`}
+        />
+      </div>
+    ))}
   </div>
-  <div class="carousel-controls" data-controls hidden>
-    <div class="carousel-navigation">
-      <span class="sr-only" data-status aria-live="off" aria-atomic="true">1 / {slides.length}</span>
-      <button type="button" class="carousel-toggle" data-toggle data-pause-label="スライドを一時停止" data-play-label="スライドを再生" aria-label="スライドを一時停止"><svg viewBox="0 0 20 20" aria-hidden="true"><path data-play-icon d="M5 3v14l11-7z" fill="currentColor" /><path data-pause-icon d="M4 3h4v14H4zM12 3h4v14h-4z" fill="currentColor" /></svg></button>
-    </div>
-    <div class="carousel-dots" aria-label="写真を選択">
-      {slides.map((_, index) => <button type="button" data-dot aria-label={`写真${index + 1}を表示`} aria-pressed={index === 0}><span></span></button>)}
-    </div>
-  </div>
-</div>
+  {slides.length > 1 && <ImageCarouselControls slideCount={slides.length} />}
+</diligent-image-carousel>
 
 <script>
   import { setupImageCarousel } from '../behaviors/image-carousel';
 
-  document.querySelectorAll<HTMLElement>('[data-image-carousel]').forEach(setupImageCarousel);
+  class DiligentImageCarousel extends HTMLElement {
+    #dispose?: () => void;
+
+    connectedCallback() {
+      this.#dispose = setupImageCarousel(this);
+    }
+
+    disconnectedCallback() {
+      this.#dispose?.();
+    }
+  }
+
+  if (!customElements.get('diligent-image-carousel')) {
+    customElements.define('diligent-image-carousel', DiligentImageCarousel);
+  }
 </script>
 
 <style>
-  .carousel-viewport { display: grid; overflow: hidden; background: var(--image-carousel-background, var(--background)); touch-action: pan-y pinch-zoom; user-select: none; }
-  [data-slide][hidden], .carousel-controls[hidden] { display: none; }
+  diligent-image-carousel { display: block; }
+
+  .carousel-viewport {
+    display: grid;
+    overflow: hidden;
+    background: var(--image-carousel-background, var(--background));
+    touch-action: pan-y pinch-zoom;
+    user-select: none;
+  }
+
+  [data-slide][hidden] { display: none; }
   [data-slide] { grid-area: 1 / 1; opacity: 0; transition: opacity 600ms ease; }
   [data-slide][data-active='true'] { opacity: 1; z-index: 1; }
-  .carousel-image { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; filter: brightness(var(--slide-brightness, 1)); }
-  .carousel-controls { display: flex; align-items: center; gap: 8px; }
-  .carousel-dots, .carousel-navigation { display: flex; align-items: center; }
-  .carousel-dots button { width: 40px; height: 44px; display: grid; place-items: center; cursor: pointer; }
-  .carousel-dots span { width: 6px; height: 6px; border: 1px solid var(--image-carousel-control-color, var(--control-foreground)); border-radius: 50%; }
-  .carousel-dots button[aria-pressed='true'] span { background: var(--image-carousel-control-color, var(--control-foreground)); }
-  .carousel-dots button:focus-visible { outline: 2px solid var(--image-carousel-focus-color, var(--outline)); outline-offset: -4px; }
-  .carousel-navigation { gap: 8px; flex-shrink: 0; }
-  .carousel-navigation { order: 1; margin-left: auto; }
-  .carousel-toggle { display: grid; place-items: center; width: 44px; height: 44px; color: var(--image-carousel-control-color, var(--control-foreground)); cursor: pointer; }
-  .carousel-toggle svg { display: block; width: 14px; height: 14px; }
-  .carousel-toggle[data-playing='true'] [data-play-icon], .carousel-toggle[data-playing='false'] [data-pause-icon] { display: none; }
-  .carousel-toggle:hover { opacity: .6; }
-  .carousel-toggle:focus-visible { outline: 2px solid var(--image-carousel-focus-color, var(--outline)); outline-offset: -4px; }
-  @media (prefers-reduced-motion: reduce) { [data-slide] { transition: none; } }
+
+  .carousel-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    filter: brightness(var(--slide-brightness, 1));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-slide] { transition: none; }
+  }
+
   @media (max-width: 767px) {
     .carousel-image { aspect-ratio: 4 / 3; }
-    .carousel-dots button { width: 32px; }
   }
 </style>
