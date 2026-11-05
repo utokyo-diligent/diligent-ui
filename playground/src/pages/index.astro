@@ -3,31 +3,8 @@ import { Button, PageHeading, SectionHeading, ContentSection, FactList, PhotoGal
 import '../../../styles.css';
 import light from '../assets/sample.svg';
 import dark from '../assets/sample-dark.svg';
-import tokenStyles from '../../../src/styles/tokens.css?raw';
-const declaration = (token: string) => tokenStyles.match(new RegExp(`--${token}:\\s*([^;]+);`))?.[1];
-function value(token: string) {
-  const raw = declaration(token);
-  const primitive = raw?.match(/^var\(--(primitive-[\w-]+)\)$/)?.[1];
-  return (primitive ? declaration(primitive) : raw) ?? '未定義';
-}
-const colors = [
-  ['background', 'ページ全体の背景'], ['foreground', '通常の文字'],
-  ['card', 'カードの背景'], ['card-foreground', 'カード上の文字'],
-  ['surface-subtle', '本文をまとめる薄い背景'], ['control-foreground', '操作アイコンの色'],
-  ['primary', '主要アクションの背景'], ['primary-foreground', '主要アクション上の文字'],
-  ['primary-accent', '主要アクションのホバー'], ['secondary', '補助アクションの背景'],
-  ['secondary-foreground', '補助アクション上の文字'], ['muted', '控えめな背景'],
-  ['muted-foreground', '補足・注記の文字'], ['accent', '強調・ホバーの背景'],
-  ['accent-foreground', '強調背景上の文字'], ['border', '区切り線・枠線'],
-  ['outline', 'フォーカスのアウトライン'],
-];
-const textRoles = [
-  { name: 'Page title', role: 'ページの主見出し', prefix: 'page-title', props: ['size', 'weight', 'leading'], extra: '767px以下: clamp(27px, 7vw, 42px)' },
-  { name: 'Section title', role: '主要セクションの見出し', prefix: 'section-title', props: ['size', 'weight', 'leading', 'tracking'] },
-  { name: 'Content title', role: '本文内のセクション見出し', prefix: 'content-title', props: ['size', 'weight', 'leading'] },
-  { name: 'Body', role: '本文・情報一覧', prefix: 'body', props: ['size', 'leading'] },
-  { name: 'Caption', role: '補足・注記', prefix: 'caption', props: ['size', 'leading'] },
-];
+import TokenReference from '../components/TokenReference.astro';
+
 const slides = [
   { image: light, alt: '明るい背景の抽象的な山のイラスト' },
   { image: dark, alt: '暗い背景の抽象的な山のイラスト' },
@@ -44,22 +21,7 @@ const slides = [
   <body>
     <main>
       <PageHeading>UI Components</PageHeading>
-      <ContentSection id="typography" title="Text — semantic roles">
-        <p>役割に応じた文字サイズと行間です。本文の標準フォントは <code>--font-body</code>（{value('font-body')}）です。</p>
-        <div class="type-examples">
-          {textRoles.map(({ name, role, prefix, props, extra }) => <div class="type-example">
-            <p class={`type-${prefix}`}>{name}</p><p>{role}</p>
-            <ul>{props.map(prop => <li><code>--text-{prefix}-{prop}</code>: {value(`text-${prefix}-${prop}`)}</li>)}</ul>
-            {extra && <p>{extra}</p>}
-          </div>)}
-        </div>
-      </ContentSection>
-      <ContentSection id="colors" title="Color — semantic roles">
-        <p>ライトテーマの初期値です。文字と背景は対応する役割を組み合わせます。</p>
-        <div class="color-examples">
-          {colors.map(([token, label]) => <div class="color-example"><div class="color-swatch" style={`background: var(--${token})`} aria-hidden="true"></div><strong>--{token}</strong><span>{value(token)}</span><span>{label}</span></div>)}
-        </div>
-      </ContentSection>
+      <TokenReference />
       <ContentSection id="buttons" title="Button">
         <div class="button-examples">
           <Button data-example="default-button">標準</Button>
@@ -67,7 +29,7 @@ const slides = [
           <Button variant="ghost">プレーン</Button>
           <Button disabled>無効</Button>
           <Button href="#content" data-example="link">リンク</Button>
-          <Button href="#content" disabled data-example="disabled-link">無効なリンク</Button>
+          <Button href="#content" disabled aria-disabled="false" data-example="disabled-link">無効なリンク</Button>
           <Button href="#content" disabled focusableWhenDisabled data-example="focusable-disabled-link">フォーカス可能な無効リンク</Button>
           <Button tabindex={-1} data-example="tabindex-button">tabindex −1</Button>
           <Button size="icon" aria-label="追加" title="追加"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M9 2h2v16H9zM2 9h16v2H2z" fill="currentColor" /></svg></Button>
@@ -101,18 +63,6 @@ const slides = [
   body { margin: 0; font-family: var(--font-body); }
   main { width: min(100% - 112px, 1328px); margin-inline: auto; padding-bottom: 80px; }
   p { line-height: 2; }
-  .type-examples p { margin-block: 0 20px; }
-  .type-example { padding-block: 16px; border-bottom: 1px solid var(--border); }
-  .type-example ul { padding-left: 20px; color: var(--muted-foreground); font-size: 12px; overflow-wrap: anywhere; }
-  .type-example p:not(:first-child) { color: var(--muted-foreground); font-size: 12px; }
-  .type-page-title { font-size: var(--text-page-title-size); font-weight: var(--text-page-title-weight); line-height: var(--text-page-title-leading); }
-  .type-section-title { font-size: var(--text-section-title-size); font-weight: var(--text-section-title-weight); line-height: var(--text-section-title-leading); letter-spacing: var(--text-section-title-tracking); }
-  .type-content-title { font-size: var(--text-content-title-size); font-weight: var(--text-content-title-weight); line-height: var(--text-content-title-leading); }
-  .type-body { font-size: var(--text-body-size); line-height: var(--text-body-leading); }
-  .type-caption { font-size: var(--text-caption-size); line-height: var(--text-caption-leading); }
-  .color-examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; }
-  .color-example { border: 1px solid var(--border); padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; font-size: 12px; }
-  .color-swatch { height: 64px; border: 1px solid var(--border); }
   .button-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
   @media (max-width: 767px) { main { width: calc(100% - 40px); } }
 </style>

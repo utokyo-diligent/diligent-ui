@@ -23,6 +23,7 @@ test('disabled links cannot navigate and only receive focus when requested', () 
   for (const name of ['disabled-link', 'focusable-disabled-link']) {
     assert.doesNotMatch(example(name), /\bhref=/);
     assert.match(example(name), /aria-disabled="true"/);
+    assert.doesNotMatch(example(name), /aria-disabled="false"/);
     assert.match(example(name), /role="link"/);
   }
   assert.match(example('disabled-link'), /tabindex="-1"/);

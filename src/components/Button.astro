@@ -2,12 +2,13 @@
 import ButtonPrimitive from "@starwind-ui/astro/button";
 import type { HTMLAttributes } from "astro/types";
 import type { VariantProps } from "tailwind-variants";
-import { button } from "./variants";
+import { button } from "./button-variants";
 
 interface Props
   extends HTMLAttributes<"button">, Omit<HTMLAttributes<"a">, "type">, VariantProps<typeof button> {
   as?: "button" | "a";
   "data-slot"?: string;
+  "data-disabled"?: string;
   focusableWhenDisabled?: boolean;
 }
 
@@ -21,19 +22,24 @@ const {
   "data-slot": dataSlot = "button",
   tabindex,
   class: className,
-  ...rest
+  role,
+  "aria-disabled": ariaDisabled,
+  "data-disabled": dataDisabled,
+  ...attributes
 } = Astro.props;
+
+const classes = button({ variant, size, class: className });
 ---
 
 {
   buttonAs === "a" || href !== undefined ? (
     <a
-      class={button({ variant, size, class: className })}
+      class={classes}
       href={disabled ? undefined : href}
-      role={disabled ? 'link' : undefined}
-      aria-disabled={disabled ? "true" : undefined}
-      data-disabled={disabled ? "" : undefined}
-      {...rest}
+      {...attributes}
+      role={disabled ? "link" : role}
+      aria-disabled={disabled ? "true" : ariaDisabled}
+      data-disabled={disabled ? "" : dataDisabled}
       tabindex={disabled ? (focusableWhenDisabled ? 0 : -1) : tabindex}
       data-slot={dataSlot}
     >
@@ -41,10 +47,12 @@ const {
     </a>
   ) : (
     <ButtonPrimitive.Root
-      class={button({ variant, size, class: className })}
+      class={classes}
       disabled={disabled}
       focusableWhenDisabled={focusableWhenDisabled}
-      {...rest}
+      {...attributes}
+      role={role}
+      {...(!disabled && { "aria-disabled": ariaDisabled, "data-disabled": dataDisabled })}
       tabindex={tabindex}
       data-slot={dataSlot}
     >

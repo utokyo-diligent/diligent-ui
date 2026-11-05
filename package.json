@@ -8,9 +8,9 @@
   "files": [
     "src/index.ts",
     "src/behaviors/*.ts",
-    "src/button/*.astro",
-    "src/button/*.ts",
     "src/components/*.astro",
+    "src/components/button-variants.ts",
+    "src/lib/responsive-image.ts",
     "src/styles/*.css",
     "styles.css",
     "starwind.config.json"

@@ -1,6 +1,8 @@
 # Diligent UI
 
-Astro用の小さなUIパッケージです。動的なUI以外はHTMLとCSSで描画します。サイトのロゴや写真、コンテンツ、ナビゲーション、フォントは利用側で管理します。
+Astro用の小さなUIパッケージです。動的なUI以外はHTMLとCSSで描画します。
+
+このリポジトリでは、再利用できるUIコンポーネント、デザイントークン、汎用サンプルを管理します。団体の紹介文、活動記録、会員数、ロゴ、写真などは、掲載するサイトのリポジトリで管理します。ナビゲーションやフォントも利用側で設定します。
 
 ## 開発と確認
 
@@ -46,6 +48,10 @@ export default defineConfig({ vite: { plugins: [tailwindcss()] } });
 
 隣接ディレクトリに依存させずに渡す場合は、UI側で `npm pack` を実行し、生成した `.tgz` を利用側で `npm install /path/to/utokyo-diligent-ui-0.1.0.tgz` します。配布ファイルの一覧は `npm pack --dry-run` で確認できます。
 
+## ソースの配置
+
+公開コンポーネントは `src/components/` に1つずつ置き、`src/index.ts` からエクスポートします。マークアップとその部品のスタイルは同じ Astro ファイルで管理します。Button のバリアントは `button-variants.ts`、カルーセルの操作は `src/behaviors/image-carousel.ts`、操作部のマークアップは `ImageCarouselControls.astro` が担当します。
+
 ## 公開コンポーネント
 
 | コンポーネント | 入力・役割 |
@@ -63,11 +69,11 @@ export default defineConfig({ vite: { plugins: [tailwindcss()] } });
 
 カルーセルは5秒ごとに切り替わり、フェード・再生/停止・ドット選択・左右キー・スワイプに対応します。マウスを重ねている間とタブの非表示中は自動再生を一時停止します。キーボードフォーカス・左右キー操作・動きを減らす設定で停止した場合は、再生ボタンで再開できます。1枚の場合とJavaScript無効時は操作部を表示しません。
 
-独自のマークアップで同じ動作を使う場合は、`@utokyo-diligent/ui/behaviors/image-carousel` の `setupImageCarousel(root)` を各ルートで1回実行します。ルートの `data-autoplay` と、子要素の `data-viewport`、`data-slide`、`data-controls`、`data-dot`、`data-status`、`data-toggle` は ImageCarousel と同じ構造で指定します。切り替えボタンに `data-play-label` と `data-pause-label` を設定すると、操作名を翻訳できます。
+独自のマークアップで同じ動作を使う場合は、`@utokyo-diligent/ui/behaviors/image-carousel` の `setupImageCarousel(root)` を各ルートで実行します。戻り値の関数でタイマーとイベントを解除でき、設定済みのルートを再度渡すと同じ解除関数を返します。ルートの `data-autoplay` と、子要素の `data-viewport`、`data-slide`、`data-controls`、`data-dot`、`data-status`、`data-toggle` は ImageCarousel と同じ構造で指定します。切り替えボタンに `data-play-label` と `data-pause-label` を設定すると、操作名を翻訳できます。
 
 色は `--background`・`--foreground`・`--card`・`--muted-foreground`・`--border` などを利用側のCSSで上書きできます。ページ見出しは `--page-heading-leading`・`--page-heading-tracking` で調整できます。各コンポーネントには `data-slot` を付けています。追加のバリエーションは必要になった時点で増やします。
 
-Starwind由来のコードは `src/button` と `src/styles/starwind.css`、設定は `starwind.config.json` にあります。出典は [Starwind UI](https://starwind.dev/)（MIT）です。
+Starwind由来のコードは `src/components/Button.astro`、`src/components/button-variants.ts` と `src/styles/starwind.css`、設定は `starwind.config.json` にあります。出典は [Starwind UI](https://starwind.dev/)（MIT）です。
 
 ## Design tokens
 
@@ -150,7 +156,7 @@ Starwindが提供するその他の色（`--info`、`--success`、`--warning`、
 }
 ```
 
-トークンの定義元は `src/styles/tokens.css`、実際の表示例は `playground/src/pages/index.astro` です。プレビューの色コードと通常時の文字設定値は定義元から取得します。
+トークンの定義元は `src/styles/tokens.css`、プレビューの説明は `playground/src/components/TokenReference.astro` にあります。プレビューの色コードと通常時の文字設定値は定義元から取得します。
 
 ## ライセンス
 

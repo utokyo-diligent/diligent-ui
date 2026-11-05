@@ -1,5 +1,5 @@
-export { default as Button } from './button/Button.astro';
-export { button as buttonVariants } from './button/variants';
+export { default as Button } from './components/Button.astro';
+export { button as buttonVariants } from './components/button-variants';
 export { default as TextLink } from './components/TextLink.astro';
 export { default as PageHeading } from './components/PageHeading.astro';
 export { default as SectionHeading } from './components/SectionHeading.astro';

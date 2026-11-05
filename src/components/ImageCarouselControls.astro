@@ -1,0 +1,77 @@
+---
+interface Props {
+  slideCount: number;
+}
+
+const { slideCount } = Astro.props;
+const playLabel = 'スライドを再生';
+const pauseLabel = 'スライドを一時停止';
+---
+<div class="carousel-controls" data-controls hidden>
+  <span class="sr-only" data-status aria-live="off" aria-atomic="true">1 / {slideCount}</span>
+  <button
+    type="button"
+    class="carousel-toggle"
+    data-toggle
+    data-play-label={playLabel}
+    data-pause-label={pauseLabel}
+    aria-label={pauseLabel}
+  >
+    <svg viewBox="0 0 20 20" aria-hidden="true">
+      <path data-play-icon d="M5 3v14l11-7z" fill="currentColor" />
+      <path data-pause-icon d="M4 3h4v14H4zM12 3h4v14h-4z" fill="currentColor" />
+    </svg>
+  </button>
+  <div class="carousel-dots" role="group" aria-label="写真を選択">
+    {Array.from({ length: slideCount }, (_, index) => (
+      <button type="button" data-dot aria-label={`写真${index + 1}を表示`} aria-pressed={index === 0}>
+        <span></span>
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .carousel-controls {
+    --control-color: var(--image-carousel-control-color, var(--control-foreground));
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .carousel-controls[hidden] { display: none; }
+
+  button {
+    display: grid;
+    place-items: center;
+    height: 44px;
+    cursor: pointer;
+  }
+
+  button:focus-visible {
+    outline: 2px solid var(--image-carousel-focus-color, var(--outline));
+    outline-offset: -4px;
+  }
+
+  .carousel-toggle {
+    order: 1;
+    flex-shrink: 0;
+    width: 44px;
+    margin-left: auto;
+    color: var(--control-color);
+  }
+
+  .carousel-toggle svg { display: block; width: 14px; height: 14px; }
+  .carousel-toggle[data-playing='true'] [data-play-icon],
+  .carousel-toggle[data-playing='false'] [data-pause-icon] { display: none; }
+  .carousel-toggle:hover { opacity: .6; }
+
+  .carousel-dots { display: flex; flex-wrap: wrap; align-items: center; }
+  .carousel-dots button { width: 40px; }
+  .carousel-dots span { width: 6px; height: 6px; border: 1px solid var(--control-color); border-radius: 50%; }
+  .carousel-dots button[aria-pressed='true'] span { background: var(--control-color); }
+
+  @media (max-width: 767px) {
+    .carousel-dots button { width: 32px; }
+  }
+</style>
