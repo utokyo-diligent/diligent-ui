@@ -1,0 +1,42 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import Button from './Button.astro';
+import SectionHeading from './SectionHeading.astro';
+
+interface Props extends HTMLAttributes<'section'> {
+  id: string;
+  title: string;
+  href: string;
+  label: string;
+}
+
+const { id, title, href, label, class: className, ...attributes } = Astro.props;
+---
+
+<section id={id} aria-labelledby={`${id}-heading`} class:list={['cta-panel', className]} data-slot="cta-panel" {...attributes}>
+  <div>
+    <SectionHeading class="title" id={`${id}-heading`} title={title} />
+    <slot />
+  </div>
+  <Button href={href} class="action" variant="primary">
+    {label} <span aria-hidden="true">→</span>
+  </Button>
+</section>
+
+<style>
+  .cta-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(max-content, 1fr);
+    gap: clamp(20px, 4vw, 64px);
+    align-items: center;
+    padding: var(--cta-panel-padding, clamp(20px, 3vw, 40px));
+    background: var(--cta-panel-background, var(--surface-subtle));
+    color: var(--foreground);
+  }
+  .title { margin-block: 0; text-wrap: balance; }
+  .action { justify-self: end; gap: 12px; border-radius: 2px; }
+  @media (max-width: 760px) {
+    .cta-panel { grid-template-columns: minmax(0, 1fr); }
+    .action { justify-self: start; }
+  }
+</style>

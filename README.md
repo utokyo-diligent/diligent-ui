@@ -46,7 +46,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({ vite: { plugins: [tailwindcss()] } });
 ```
 
-隣接ディレクトリに依存させずに渡す場合は、UI側で `npm pack` を実行し、生成した `.tgz` を利用側で `npm install /path/to/utokyo-diligent-ui-0.1.0.tgz` します。配布ファイルの一覧は `npm pack --dry-run` で確認できます。
+隣接ディレクトリに依存させずに渡す場合は、UI側で `npm pack` を実行し、生成した `.tgz` を利用側で `npm install /path/to/utokyo-diligent-ui-0.1.1.tgz` します。配布ファイルの一覧は `npm pack --dry-run` で確認できます。
 
 ## ソースの配置
 
@@ -65,6 +65,23 @@ export default defineConfig({ vite: { plugins: [tailwindcss()] } });
 | `FactList` | `items: { label, value }[]`。`dl` による情報一覧 |
 | `PhotoGallery` | `photos: { image, alt, caption? }[]`。1枚は全幅、複数枚は2列 |
 | `ImageCarousel` | `slides: { image, alt, brightness? }[]`・`label`・`labels?`・`autoplay`・`sizes` |
+| `CtaPanel` | `id`・`title`・`href`・`label`。薄い背景に見出しとボタンを配置。任意の本文はデフォルトスロット |
+| `TextMediaSection` | 本文はデフォルトスロット、画像などは `media` スロット。`mediaFirst` で画像を先に配置。`as` は `section`（既定）・`article`・`div` |
+| `EditorialHero` | `id`・`title`・`sectionTitle`・`description`。画像は `media`、任意のアクションは `actions` スロット |
+| `CardRail` | `label` で一覧名を指定。スロットに `li` を渡す横スクロール一覧。カード内の構成は利用側で指定 |
+
+`styles.css` は `.section-title`、`.content-title`、`.text-note` も提供します。既存の見出し・本文内見出し・注記トークンを適用するクラスです。本文全体のスタイルやフォントは利用側で設定します。
+
+```astro
+<TextMediaSection aria-labelledby="feature-heading">
+  <h2 id="feature-heading" class="section-title">取り組みの紹介</h2>
+  <p>紹介文をここに書きます。</p>
+  <img slot="media" src="/images/example.webp" alt="活動の様子" />
+</TextMediaSection>
+<CtaPanel id="contact" title="お問い合わせ" href="/contact/" label="連絡する" />
+```
+
+セクションの `id` はページ内で一意にしてください。`CtaPanel` は `${id}-heading`、`EditorialHero` は `${id}-title` と `${id}-intro-heading` を見出しのIDに使います。画像の最適化・サイズ・代替テキストは利用側の責務です。`CardRail` の一覧には読み取り可能な `label` を指定してください。
 
 画像はAstroのローカル `ImageMetadata` を渡します。ラスター画像はWebPに最適化し、元画像より大きく生成しません。SVGはそのまま使います。ギャラリーとカルーセルの `sizes` は利用側のコンテナ幅に合わせて指定できます。
 
@@ -100,6 +117,10 @@ Primitive、Semantic、Component-specific の3層を使います。既定値と�
 | TextLink / PhotoGallery | `--text-link-size` と `--photo-gallery-caption-size` は `--text-note-size`（13px）。リンクの色は継承し、キャプションは補足色 |
 | LinkRow | `--link-row-label-size` は本文内見出し、`--link-row-arrow-color` は主要アクション色を参照。`--link-row-padding` で行の余白を調整 |
 | ImageCarousel | `--image-carousel-background`、`--image-carousel-control-color`、`--image-carousel-focus-color` は背景・操作・フォーカスの色を参照 |
+| CtaPanel | `--cta-panel-background` は `--surface-subtle`、`--cta-panel-padding` は `clamp(20px, 3vw, 40px)` |
+| TextMediaSection | `--text-media-columns` は等幅2列、`--text-media-gap` は `clamp(30px, 4.4vw, 68px)`。800px以下は1列 |
+| EditorialHero | `--editorial-hero-padding-bottom` は `clamp(48px, 5.5vw, 80px)` |
+| CardRail | `--card-rail-item-width` は `clamp(196px, 19%, 248px)`、`--card-rail-gap` は `clamp(20px, 2.8vw, 40px)` |
 
 CSS変数は意味と用途で選び、個々のコンポーネントや利用側から上書きできます。フォントファミリーは利用側が設定します。以下はライトテーマの初期値です。
 

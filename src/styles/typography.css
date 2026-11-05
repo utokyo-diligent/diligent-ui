@@ -1,0 +1,18 @@
+.section-title {
+  font-size: var(--text-section-title-size);
+  font-weight: var(--text-section-title-weight);
+  letter-spacing: var(--text-section-title-tracking);
+  line-height: var(--text-section-title-leading);
+}
+
+.content-title {
+  font-size: var(--text-content-title-size);
+  font-weight: var(--text-content-title-weight);
+  line-height: var(--text-content-title-leading);
+}
+
+.text-note {
+  color: var(--muted-foreground);
+  font-size: var(--text-note-size);
+  line-height: var(--text-note-leading);
+}

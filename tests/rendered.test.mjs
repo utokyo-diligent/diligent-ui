@@ -37,3 +37,32 @@ test('link rows render one native link with a decorative arrow', () => {
   assert.match(row, /コンポーネント概要/);
   assert.match(row, /<svg[^>]+aria-hidden="true"/);
 });
+
+test('CTA and editorial sections connect their accessible names to unique headings', () => {
+  for (const id of ['cta-example-heading', 'editorial-example-title', 'editorial-example-intro-heading']) {
+    assert.equal(html.split(`id="${id}"`).length - 1, 1, `${id} must be unique`);
+  }
+  assert.match(html, /<section\b[^>]*aria-labelledby="cta-example-heading"/);
+  assert.match(html, /<h2\b[^>]*id="cta-example-heading"/);
+  assert.match(html, /aria-labelledby="editorial-example-intro-heading"/);
+  assert.match(html, /複数の段落を指定できます。/);
+  assert.match(html, /文言・画像・リンクは利用側が渡します。/);
+});
+
+test('text-media sections preserve the requested DOM reading order', () => {
+  for (const [id, first, second] of [
+    ['text-media', 'text-media-content', 'text-media-media'],
+    ['media-first', 'text-media-media', 'text-media-content'],
+  ]) {
+    const section = html.split(`id="${id}"`)[1].split('</section>')[0];
+    assert.ok(section.includes(`data-slot="${first}"`));
+    assert.ok(section.includes(`data-slot="${second}"`));
+    assert.ok(section.indexOf(`data-slot="${first}"`) < section.indexOf(`data-slot="${second}"`));
+  }
+});
+
+test('card rails render a named list and remain readable without hydration', () => {
+  assert.match(html, /<ol\b[^>]*aria-label="サンプルカード一覧"/);
+  assert.match(html, /サンプル 8/);
+  assert.doesNotMatch(html, /<astro-island\b/);
+});

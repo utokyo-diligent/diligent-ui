@@ -1,0 +1,42 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import { ScrollArea } from '@starwind-ui/astro/scroll-area';
+
+interface Props extends HTMLAttributes<'div'> { label: string; }
+const { label, class: className, ...attributes } = Astro.props;
+---
+
+<ScrollArea.Root class:list={['card-rail', className]} data-slot="card-rail" {...attributes}>
+  <ScrollArea.Viewport class="viewport">
+    <ScrollArea.Content>
+      <ol class="cards" role="list" aria-label={label}><slot /></ol>
+    </ScrollArea.Content>
+  </ScrollArea.Viewport>
+  <ScrollArea.Scrollbar class="scrollbar" orientation="horizontal" hidden>
+    <ScrollArea.Thumb class="thumb" />
+  </ScrollArea.Scrollbar>
+</ScrollArea.Root>
+
+<style>
+  .card-rail { min-width: 0; }
+  .card-rail[data-has-overflow-x] .viewport { scrollbar-width: none; }
+  .cards {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: var(--card-rail-item-width, clamp(196px, 19%, 248px));
+    gap: var(--card-rail-gap, clamp(20px, 2.8vw, 40px));
+  }
+  .scrollbar {
+    height: 16px;
+    margin-top: 8px;
+    background: linear-gradient(var(--border), var(--border)) center / 100% 4px no-repeat;
+    touch-action: none;
+    user-select: none;
+  }
+  .thumb {
+    border-block: 6px solid transparent;
+    background: var(--foreground) padding-box;
+    cursor: grab;
+  }
+  .thumb:active { cursor: grabbing; }
+</style>

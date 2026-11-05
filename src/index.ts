@@ -8,3 +8,7 @@ export { default as ContentSection } from './components/ContentSection.astro';
 export { default as FactList } from './components/FactList.astro';
 export { default as PhotoGallery } from './components/PhotoGallery.astro';
 export { default as ImageCarousel } from './components/ImageCarousel.astro';
+export { default as CtaPanel } from './components/CtaPanel.astro';
+export { default as TextMediaSection } from './components/TextMediaSection.astro';
+export { default as EditorialHero } from './components/EditorialHero.astro';
+export { default as CardRail } from './components/CardRail.astro';

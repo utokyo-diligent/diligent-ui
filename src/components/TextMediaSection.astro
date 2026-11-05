@@ -1,0 +1,29 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+
+interface Props extends HTMLAttributes<'section'> {
+  as?: 'section' | 'article' | 'div';
+  mediaFirst?: boolean;
+}
+
+const { as: Tag = 'section', mediaFirst = false, class: className, ...attributes } = Astro.props;
+---
+
+<Tag class:list={['text-media', className]} data-slot="text-media-section" {...attributes}>
+  {mediaFirst && <div class="media" data-slot="text-media-media"><slot name="media" /></div>}
+  <div class="content" data-slot="text-media-content"><slot /></div>
+  {!mediaFirst && <div class="media" data-slot="text-media-media"><slot name="media" /></div>}
+</Tag>
+
+<style>
+  .text-media {
+    display: grid;
+    grid-template-columns: var(--text-media-columns, repeat(2, minmax(0, 1fr)));
+    align-items: center;
+    gap: var(--text-media-gap, clamp(30px, 4.4vw, 68px));
+  }
+  .content, .media { min-width: 0; }
+  @media (max-width: 800px) {
+    .text-media { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

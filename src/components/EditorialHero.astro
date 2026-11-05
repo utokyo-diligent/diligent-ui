@@ -1,0 +1,34 @@
+---
+import type { HTMLAttributes } from 'astro/types';
+import PageHeading from './PageHeading.astro';
+import TextMediaSection from './TextMediaSection.astro';
+
+interface Props extends HTMLAttributes<'div'> {
+  id: string;
+  title: string;
+  sectionTitle: string;
+  description: string | readonly string[];
+}
+
+const { id, title, sectionTitle, description, class: className, ...attributes } = Astro.props;
+const paragraphs = typeof description === 'string' ? [description] : description;
+---
+
+<div id={id} class:list={['editorial-hero', className]} data-slot="editorial-hero" {...attributes}>
+  <header><PageHeading id={`${id}-title`}>{title}</PageHeading></header>
+  <TextMediaSection aria-labelledby={`${id}-intro-heading`}>
+    <h2 class="section-title intro-heading" id={`${id}-intro-heading`}>{sectionTitle}</h2>
+    {paragraphs.map(paragraph => <p class="description">{paragraph}</p>)}
+    {Astro.slots.has('actions') && <div class="actions"><slot name="actions" /></div>}
+    <slot name="media" slot="media" />
+  </TextMediaSection>
+</div>
+
+<style>
+  .editorial-hero { padding-bottom: var(--editorial-hero-padding-bottom, clamp(48px, 5.5vw, 80px)); }
+  .intro-heading { margin-bottom: 20px; }
+  .description { max-width: 60ch; text-wrap: pretty; }
+  .description + .description { margin-top: 16px; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 22px; margin-top: 27px; }
+  .actions:empty { display: none; }
+</style>

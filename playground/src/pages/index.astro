@@ -1,5 +1,5 @@
 ---
-import { Button, LinkRow, PageHeading, SectionHeading, ContentSection, FactList, PhotoGallery, ImageCarousel } from '../../../src';
+import { Button, LinkRow, PageHeading, SectionHeading, ContentSection, FactList, PhotoGallery, ImageCarousel, CtaPanel, TextMediaSection, EditorialHero, CardRail } from '../../../src';
 import '../../../styles.css';
 import light from '../assets/sample.svg';
 import dark from '../assets/sample-dark.svg';
@@ -60,6 +60,40 @@ const slides = [
       <ContentSection id="single-photo" title="PhotoGallery: 1枚">
         <PhotoGallery photos={[{ ...slides[0], caption: '1枚の場合は全幅で表示します。' }]} sizes="100vw" />
       </ContentSection>
+      <ContentSection id="typography" title="Typography helpers">
+        <h3 class="section-title">セクションの見出し</h3>
+        <h4 class="content-title">本文内の見出し</h4>
+        <p class="text-note">補足には既存の注記トークンを適用します。</p>
+      </ContentSection>
+      <TextMediaSection id="text-media" aria-labelledby="text-media-heading" data-example="text-media">
+        <h2 class="section-title" id="text-media-heading">テキストと画像</h2>
+        <p>本文と画像を2列に並べ、狭い画面では縦に表示します。</p>
+        <img slot="media" src={light.src} alt="抽象的な山のイラスト" width="1280" height="800" />
+      </TextMediaSection>
+      <TextMediaSection id="media-first" mediaFirst aria-labelledby="media-first-heading" data-example="media-first">
+        <h2 class="section-title" id="media-first-heading">画像から始まる紹介</h2>
+        <p>画像を先に配置し、同じ読み順で表示します。</p>
+        <img slot="media" src={dark.src} alt="暗い背景の山のイラスト" width="1280" height="800" />
+      </TextMediaSection>
+      <EditorialHero id="editorial-example" title="ページの導入部" sectionTitle="紹介" description={['複数の段落を指定できます。', '文言・画像・リンクは利用側が渡します。']} data-example="editorial-hero">
+        <img slot="media" src={light.src} alt="導入部の山のイラスト" width="1280" height="800" />
+        <Button slot="actions" href="#content">概要を見る</Button>
+      </EditorialHero>
+      <section aria-labelledby="card-rail-heading">
+        <h2 class="section-title" id="card-rail-heading">横スクロールのカード</h2>
+        <CardRail label="サンプルカード一覧" data-example="card-rail">
+          {Array.from({ length: 8 }, (_, index) => (
+            <li class="sample-card">
+              <img src={light.src} alt="" width="1280" height="800" />
+              <h3 class="content-title">サンプル {index + 1}</h3>
+              <p class="text-note">カードの内容は利用側が指定します。</p>
+            </li>
+          ))}
+        </CardRail>
+      </section>
+      <CtaPanel id="cta-example" title="詳しく知りたい方へ" href="#content" label="概要を確認する" data-example="cta-panel">
+        <p class="text-note">補足の説明もスロットで追加できます。</p>
+      </CtaPanel>
     </main>
   </body>
 </html>
@@ -68,5 +102,8 @@ const slides = [
   main { width: min(100% - 112px, 1328px); margin-inline: auto; padding-bottom: 80px; }
   p { line-height: 2; }
   .button-examples { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+  #text-media, #media-first, #editorial-example, section:has(> #card-rail-heading) { margin-bottom: 72px; }
+  .sample-card { background: var(--surface-subtle); padding-bottom: 16px; }
+  .sample-card h3, .sample-card p { padding-inline: 12px; }
   @media (max-width: 767px) { main { width: calc(100% - 40px); } }
 </style>
