@@ -5,14 +5,33 @@ import type { HTMLAttributes } from 'astro/types';
 import ImageCarouselControls from './ImageCarouselControls.astro';
 import { responsiveImage } from '../lib/responsive-image';
 
+interface CarouselLabels {
+  carousel: string;
+  slide: string;
+  play: string;
+  pause: string;
+  select: string;
+  showPhoto: (number: number) => string;
+}
+
+const defaultLabels: CarouselLabels = {
+  carousel: 'カルーセル',
+  slide: 'スライド',
+  play: 'スライドを再生',
+  pause: 'スライドを一時停止',
+  select: '写真を選択',
+  showPhoto: (number) => `写真${number}を表示`,
+};
+
 interface Props extends HTMLAttributes<'div'> {
   slides: readonly { image: ImageMetadata; alt: string; brightness?: number }[];
   label: string;
+  labels?: CarouselLabels;
   autoplay?: boolean;
   sizes?: string;
 }
 
-const { slides, label, autoplay = true, sizes = '100vw', ...attributes } = Astro.props;
+const { slides, label, labels = defaultLabels, autoplay = true, sizes = '100vw', ...attributes } = Astro.props;
 if (!slides.length) throw new Error('ImageCarousel requires at least one slide.');
 ---
 <diligent-image-carousel
@@ -20,7 +39,7 @@ if (!slides.length) throw new Error('ImageCarousel requires at least one slide.'
   data-autoplay={autoplay}
   data-slot="image-carousel"
   role="region"
-  aria-roledescription="カルーセル"
+  aria-roledescription={labels.carousel}
   aria-label={label}
   {...attributes}
 >
@@ -30,7 +49,7 @@ if (!slides.length) throw new Error('ImageCarousel requires at least one slide.'
         data-slide
         data-active={String(index === 0)}
         role="group"
-        aria-roledescription="スライド"
+        aria-roledescription={labels.slide}
         aria-label={`${index + 1} / ${slides.length}`}
         aria-hidden={index === 0 ? undefined : 'true'}
         hidden={index !== 0}
@@ -50,7 +69,7 @@ if (!slides.length) throw new Error('ImageCarousel requires at least one slide.'
       </div>
     ))}
   </div>
-  {slides.length > 1 && <ImageCarouselControls slideCount={slides.length} />}
+  {slides.length > 1 && <ImageCarouselControls slideCount={slides.length} labels={labels} />}
 </diligent-image-carousel>
 
 <script>

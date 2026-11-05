@@ -64,11 +64,13 @@ export default defineConfig({ vite: { plugins: [tailwindcss()] } });
 | `ContentSection` | `id`・`title`。見出しの下に本文を配置 |
 | `FactList` | `items: { label, value }[]`。`dl` による情報一覧 |
 | `PhotoGallery` | `photos: { image, alt, caption? }[]`。1枚は全幅、複数枚は2列 |
-| `ImageCarousel` | `slides: { image, alt, brightness? }[]`・`label`・`autoplay`・`sizes` |
+| `ImageCarousel` | `slides: { image, alt, brightness? }[]`・`label`・`labels?`・`autoplay`・`sizes` |
 
 画像はAstroのローカル `ImageMetadata` を渡します。ラスター画像はWebPに最適化し、元画像より大きく生成しません。SVGはそのまま使います。ギャラリーとカルーセルの `sizes` は利用側のコンテナ幅に合わせて指定できます。
 
 カルーセルは5秒ごとに切り替わり、フェード・再生/停止・ドット選択・左右キー・スワイプに対応します。マウスを重ねている間とタブの非表示中は自動再生を一時停止します。キーボードフォーカス・左右キー操作・動きを減らす設定で停止した場合は、再生ボタンで再開できます。1枚の場合とJavaScript無効時は操作部を表示しません。
+
+既定の操作ラベルは日本語です。`labels` に `carousel`、`slide`、`play`、`pause`、`select` の文字列と、1始まりの写真番号をラベルに変換する `showPhoto` を渡すと翻訳できます。
 
 独自のマークアップで同じ動作を使う場合は、`@utokyo-diligent/ui/behaviors/image-carousel` の `setupImageCarousel(root)` を各ルートで実行します。戻り値の関数でタイマーとイベントを解除でき、設定済みのルートを再度渡すと同じ解除関数を返します。ルートの `data-autoplay` と、子要素の `data-viewport`、`data-slide`、`data-controls`、`data-dot`、`data-status`、`data-toggle` は ImageCarousel と同じ構造で指定します。切り替えボタンに `data-play-label` と `data-pause-label` を設定すると、操作名を翻訳できます。
 
